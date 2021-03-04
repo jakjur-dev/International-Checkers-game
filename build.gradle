@@ -1,22 +1,22 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.3'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
 }
-
-group = 'com.game'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 }
 
-test {
-    useJUnitPlatform()
+javafx {
+    version = "15.0.1"
+    modules = [ 'javafx.controls' ]
 }
+
+group 'com.game'
+version '1.0-SNAPSHOT'
+mainClassName = 'com.game.GameApplication'
+
