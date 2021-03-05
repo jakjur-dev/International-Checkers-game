@@ -1,6 +1,6 @@
 package com.checkers;
 
-public class PiecePosition {
+public class PiecePosition  {
 
     private int column;
     private int row;

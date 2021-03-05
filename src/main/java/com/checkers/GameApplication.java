@@ -17,14 +17,13 @@ import javafx.stage.Stage;
 
 public class GameApplication extends Application {
 
-    private static Stage primaryStage = new Stage();
+    private final BoardCompiler boardCompiler = new BoardCompiler();
+    private final BoardDrawer boardDrawer = new BoardDrawer(boardCompiler);
 
     @Override
     public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
 
-        GridPane grid = new GridPane();
-        Scene scene = new Scene(grid, 585, 612, Color.BLACK);
+        Scene scene = new Scene(boardDrawer.getBorderPane(), 900, 900, Color.BLUE);
 
         primaryStage.setTitle("Checkers Game");
         primaryStage.setScene(scene);
