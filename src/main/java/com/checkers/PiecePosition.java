@@ -18,6 +18,10 @@ public class PiecePosition  {
         return row;
     }
 
+    public boolean isValidPosition() {
+        return column >= 0 && column <= 9 && row >= 0 && row <= 9;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

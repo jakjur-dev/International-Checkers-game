@@ -17,13 +17,17 @@ import javafx.stage.Stage;
 
 public class GameApplication extends Application {
 
-    private final BoardCompiler boardCompiler = new BoardCompiler();
-    private final BoardDrawer boardDrawer = new BoardDrawer(boardCompiler);
+    private static Stage primaryStage = new Stage();
+    private BoardCompiler boardCompiler = new BoardCompiler();
+    private BoardDrawer boardDrawer = new BoardDrawer(boardCompiler);
+    private MouseControl mouseControl = new MouseControl(boardCompiler);
 
     @Override
     public void start(Stage primaryStage) {
 
-        Scene scene = new Scene(boardDrawer.getBorderPane(), 900, 900, Color.BLUE);
+        this.primaryStage = primaryStage;
+        Scene scene = new Scene(boardDrawer.getBorderPane(), 900, 900, Color.BLACK);
+        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseControl.getMouseClick());
 
         primaryStage.setTitle("Checkers Game");
         primaryStage.setScene(scene);

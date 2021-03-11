@@ -15,6 +15,7 @@ public class BoardDrawer {
     private final BorderPane borderPane = new BorderPane();
     private static GridPane grid = new GridPane();
     Image boardImage = new Image(ResourceFinder.getPath("board.png"));
+    private static final Image highlight = new Image(ResourceFinder.getPath("highlight.png"));
 
     public BoardDrawer(BoardCompiler boardCompiler) {
 
@@ -43,17 +44,26 @@ public class BoardDrawer {
 
         //create pieces
         for(Map.Entry<PiecePosition, PieceType> pieces : boardCompiler.getBoard().entrySet()){
-            addPiece(pieces.getKey(), pieces.getValue());
+            addPiece(pieces.getKey(), pieces.getValue(), false);
         }
 
         borderPane.setCenter(grid);
     }
 
-    protected static void addPiece(PiecePosition position, PieceType piece) {
-        ImageView image = new ImageView(ResourceFinder.generateImagePath(piece));
+    protected static void addPiece(PiecePosition position, PieceType pieceType, boolean highlight) {
+        ImageView image = new ImageView(ResourceFinder.generateImagePath(pieceType, highlight));
         image.setFitHeight(70);
         image.setFitWidth(70);
         grid.add(image, position.getCol(), position.getRow());
+    }
+
+    protected static void removePiece(PiecePosition position) {
+        grid.getChildren().removeIf(node -> node instanceof ImageView && Objects.equals(GridPane.getColumnIndex(node), position.getCol())
+                && Objects.equals(GridPane.getRowIndex(node), position.getRow()));
+    }
+
+    protected static void highlightMove(PiecePosition position) {
+        grid.add(new ImageView(highlight), position.getCol(), position.getRow());
     }
 
     public BorderPane getBorderPane() {

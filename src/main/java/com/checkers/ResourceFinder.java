@@ -15,8 +15,11 @@ public class ResourceFinder {
         return resource.getProtocol() + ":" + resource.getPath();
     }
 
-    public static Image generateImagePath(PieceType piece) {
-
+    public static Image generateImagePath(PieceType piece, boolean highlight) {
+        if(highlight) {
+            return new Image(ResourceFinder.getPath(piece.getPieceColor() + "-" + piece.getPieceType() + "-highlight.png"));
+        } else {
             return new Image(ResourceFinder.getPath(piece.getPieceColor() + "-" + piece.getPieceType() + ".png"));
+        }
         }
     }
