@@ -6,6 +6,7 @@ import java.util.Set;
 
 public class NormalMoves {
 
+
     private final BoardCompiler boardCompiler;
 
     private final Set<PiecePosition> allPossibleHumanMoves = new HashSet<>();
@@ -34,6 +35,9 @@ public class NormalMoves {
         return allPossibleHumanMoves;
     }
 
+    public Set<PiecePosition> getAllPossibleAIMoves() {
+        return allPossibleAIMoves;
+    }
 
     public void clear() {
         allPossibleHumanMoves.clear();

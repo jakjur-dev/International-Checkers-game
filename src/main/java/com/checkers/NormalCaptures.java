@@ -8,21 +8,21 @@ import java.util.Set;
 
 public class NormalCaptures {
 
-    private final BoardCompiler board;
+    private final BoardCompiler boardCompiler;
 
     private final Set<PiecePosition> allPossibleCaptures = new HashSet<>();
     private final Set<PiecePosition> allPiecesWhichCanCapture = new HashSet<>();
     private final Set<PiecePosition> positionsAfterCapturing = new HashSet<>();
 
-    public NormalCaptures(BoardCompiler board) {
-        this.board = board;
+    public NormalCaptures(BoardCompiler boardCompiler) {
+        this.boardCompiler = boardCompiler;
     }
 
     public void calculateAllPossibleCaptures(PieceType.Color color) {
         allPossibleCaptures.clear();
         allPiecesWhichCanCapture.clear();
 
-        for (Map.Entry<PiecePosition, PieceType> piece : board.getBoard().entrySet()) {
+        for (Map.Entry<PiecePosition, PieceType> piece : boardCompiler.getBoard().entrySet()) {
             if(piece.getValue().getPieceColor() == color && piece.getValue().getPieceType().isNormal()){
 
                 if(capturePossibility(piece.getKey(), 1, 1)){
@@ -75,9 +75,9 @@ public class NormalCaptures {
     private boolean capturePossibility(PiecePosition actualPosition, int col, int row) {
         return new PiecePosition(actualPosition.getCol() + col, actualPosition.getRow() + row).isValidPosition()
                 && new PiecePosition(actualPosition.getCol() + (col * 2), actualPosition.getRow() + (row * 2)).isValidPosition()
-                && !board.isFieldNull(new PiecePosition(actualPosition.getCol() + col, actualPosition.getRow() + row))
-                && board.isFieldNull(new PiecePosition(actualPosition.getCol() + (col * 2), actualPosition.getRow() + (row * 2)))
-                && (board.getPiece(actualPosition).getPieceColor() != board.getPiece(new PiecePosition(actualPosition.getCol() + col, actualPosition.getRow() + row)).getPieceColor());
+                && !boardCompiler.isFieldNull(new PiecePosition(actualPosition.getCol() + col, actualPosition.getRow() + row))
+                && boardCompiler.isFieldNull(new PiecePosition(actualPosition.getCol() + (col * 2), actualPosition.getRow() + (row * 2)))
+                && (boardCompiler.getPiece(actualPosition).getPieceColor() != boardCompiler.getPiece(new PiecePosition(actualPosition.getCol() + col, actualPosition.getRow() + row)).getPieceColor());
     }
 
     public void clear() {

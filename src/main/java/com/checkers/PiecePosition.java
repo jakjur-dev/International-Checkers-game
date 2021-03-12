@@ -2,16 +2,16 @@ package com.checkers;
 
 public class PiecePosition  {
 
-    private int column;
+    private int col;
     private int row;
 
-    public PiecePosition(int column, int row) {
-        this.column = column;
+    public PiecePosition(int col, int row) {
+        this.col = col;
         this.row = row;
     }
 
     public int getCol() {
-        return column;
+        return col;
     }
 
     public int getRow() {
@@ -19,7 +19,7 @@ public class PiecePosition  {
     }
 
     public boolean isValidPosition() {
-        return column >= 0 && column <= 9 && row >= 0 && row <= 9;
+        return col >= 0 && col <= 9 && row >= 0 && row <= 9;
     }
 
     @Override
@@ -29,13 +29,13 @@ public class PiecePosition  {
 
         PiecePosition that = (PiecePosition) o;
 
-        if (column != that.column) return false;
+        if (col != that.col) return false;
         return row == that.row;
     }
 
     @Override
     public int hashCode() {
-        int result = column;
+        int result = col;
         result = 31 * result + row;
         return result;
     }

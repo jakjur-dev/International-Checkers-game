@@ -46,14 +46,14 @@ public class PieceMover {
 
         normalCaptures.captureCalculator(newPosition);
 
-        if (!normalCaptures.getPositionsAfterCapturing().isEmpty() && pieceType.getPieceType().isNormal()) {
+
+        if(!normalCaptures.getPositionsAfterCapturing().isEmpty() && pieceType.getPieceType().isNormal()) {
             normalCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::highlightMove);
 
             BoardDrawer.removePiece(oldPosition);
             BoardDrawer.addPiece(newPosition, pieceType, true);
         }
     }
-
 
     public static PiecePosition findOppositePosition(PiecePosition newPosition, Set<PiecePosition> possibleNormalCaptures) {
 
@@ -64,7 +64,7 @@ public class PieceMover {
 
         PiecePosition kickPosition = null;
 
-        if(possibleNormalCaptures.contains(upLeft)){
+        if(possibleNormalCaptures.contains(upLeft)) {
             kickPosition = upLeft;
         }
         if(possibleNormalCaptures.contains(downLeft)) {

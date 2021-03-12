@@ -22,7 +22,7 @@ public class MouseControl {
                 return;
             }
 
-            boardCompiler.handleWhiteMove(clickPosition);
+            boardCompiler.handleMove(clickPosition);
         }
     };
 

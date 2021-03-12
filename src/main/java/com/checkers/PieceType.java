@@ -1,8 +1,22 @@
 package com.checkers;
 
-import javafx.scene.paint.Color;
-
 public class PieceType {
+
+    private Color pieceColor;
+    private Type pieceType;
+
+    public PieceType(Color pieceColor, Type pieceType) {
+        this.pieceColor = pieceColor;
+        this.pieceType = pieceType;
+    }
+
+    public Color getPieceColor() {
+        return pieceColor;
+    }
+
+    public Type getPieceType() {
+        return pieceType;
+    }
 
     public enum Color {
         BLACK, WHITE;
@@ -26,21 +40,5 @@ public class PieceType {
         public boolean isQueen() {
             return this == QUEEN;
         }
-    }
-
-    private Color pieceColor;
-    private Type pieceType;
-
-    public PieceType(Color pieceColor, Type pieceType) {
-        this.pieceColor = pieceColor;
-        this.pieceType = pieceType;
-    }
-
-    public Color getPieceColor() {
-        return pieceColor;
-    }
-
-    public Type getPieceType() {
-        return pieceType;
     }
 }
