@@ -1,7 +1,6 @@
 package com.checkers;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class NormalMoves {
@@ -9,7 +8,7 @@ public class NormalMoves {
 
     private final BoardCompiler boardCompiler;
 
-    private final Set<PiecePosition> allPossibleHumanMoves = new HashSet<>();
+    private final Set<PiecePosition> allPossiblePieceMoves = new HashSet<>();
     private final Set<PiecePosition> allPossibleAIMoves = new HashSet<>();
 
     public NormalMoves(BoardCompiler boardCompiler) {
@@ -23,16 +22,16 @@ public class NormalMoves {
         PiecePosition right = new PiecePosition(actualPosition.getCol() + 1, actualPosition.getRow() + direction);
 
         if (left.isValidPosition() && boardCompiler.isFieldNull(left)) {
-            allPossibleHumanMoves.add(left);
+            allPossiblePieceMoves.add(left);
         }
 
         if (right.isValidPosition() && boardCompiler.isFieldNull(right)) {
-            allPossibleHumanMoves.add(right);
+            allPossiblePieceMoves.add(right);
         }
     }
 
-    public Set<PiecePosition> getAllPossibleHumanMoves() {
-        return allPossibleHumanMoves;
+    public Set<PiecePosition> getAllPossiblePieceMoves() {
+        return allPossiblePieceMoves;
     }
 
     public Set<PiecePosition> getAllPossibleAIMoves() {
@@ -40,7 +39,7 @@ public class NormalMoves {
     }
 
     public void clear() {
-        allPossibleHumanMoves.clear();
+        allPossiblePieceMoves.clear();
         allPossibleAIMoves.clear();
     }
 }

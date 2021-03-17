@@ -11,6 +11,8 @@ public class BoardCompiler {
 
     private final NormalCaptures normalCaptures;
 
+    private final EndGame endGame = new EndGame(this);
+
     private boolean turn = true;
 
     private PiecePosition pickedPosition;
@@ -79,21 +81,21 @@ public class BoardCompiler {
                     PieceMover.pickPiece(board, position, pickedPosition, true);
                     pickedPosition = position;
 
-                    normalMoves.getAllPossibleHumanMoves().forEach(BoardDrawer::removePiece);
+                    normalMoves.getAllPossiblePieceMoves().forEach(BoardDrawer::removePiece);
 
                     normalMoves.clear();
 
                     if(board.get(position).getPieceType() == PieceType.Type.NORMAL) {
 
                         normalMoves.normalMoveCalculator(position, true);
-                        normalMoves.getAllPossibleHumanMoves().forEach(BoardDrawer::highlightMove);
+                        normalMoves.getAllPossiblePieceMoves().forEach(BoardDrawer::highlightMove);
 
                     }
 
-                } else if(normalMoves.getAllPossibleHumanMoves().contains(position)
+                } else if(normalMoves.getAllPossiblePieceMoves().contains(position)
                         && pickedPosition != null) {
 
-                    normalMoves.getAllPossibleHumanMoves().forEach(BoardDrawer::removePiece);
+                    normalMoves.getAllPossiblePieceMoves().forEach(BoardDrawer::removePiece);
 
                     PieceMover.movePiece(board, position, pickedPosition);
 
@@ -103,6 +105,7 @@ public class BoardCompiler {
 
                 }
             }
+
         } else {
             normalCaptures.calculateAllPossibleCaptures(PieceType.Color.BLACK);
 
@@ -148,21 +151,21 @@ public class BoardCompiler {
                     PieceMover.pickPiece(board, position, pickedPosition, true);
                     pickedPosition = position;
 
-                    normalMoves.getAllPossibleHumanMoves().forEach(BoardDrawer::removePiece);
+                    normalMoves.getAllPossiblePieceMoves().forEach(BoardDrawer::removePiece);
 
                     normalMoves.clear();
 
                     if(board.get(position).getPieceType() == PieceType.Type.NORMAL) {
 
                         normalMoves.normalMoveCalculator(position, false);
-                        normalMoves.getAllPossibleHumanMoves().forEach(BoardDrawer::highlightMove);
+                        normalMoves.getAllPossiblePieceMoves().forEach(BoardDrawer::highlightMove);
 
                     }
 
-                } else if(normalMoves.getAllPossibleHumanMoves().contains(position)
+                } else if(normalMoves.getAllPossiblePieceMoves().contains(position)
                         && pickedPosition != null) {
 
-                    normalMoves.getAllPossibleHumanMoves().forEach(BoardDrawer::removePiece);
+                    normalMoves.getAllPossiblePieceMoves().forEach(BoardDrawer::removePiece);
 
                     PieceMover.movePiece(board, position, pickedPosition);
 
@@ -178,6 +181,8 @@ public class BoardCompiler {
     private void endMove() {
         pickedPosition = null;
 
+        endGame.checkEndGame(getBoard().keySet());
+
         normalMoves.clear();
         normalCaptures.clear();
         normalCaptures.clear();
@@ -185,6 +190,8 @@ public class BoardCompiler {
 
     private void endCapture() {
         pickedPosition = null;
+
+        endGame.checkEndGame(getBoard().keySet());
 
         normalCaptures.clear();
         normalCaptures.clear();

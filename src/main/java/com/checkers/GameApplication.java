@@ -18,14 +18,14 @@ import javafx.stage.Stage;
 public class GameApplication extends Application {
 
     private static Stage primaryStage = new Stage();
-    private BoardCompiler boardCompiler = new BoardCompiler();
-    private BoardDrawer boardDrawer = new BoardDrawer(boardCompiler);
-    private MouseControl mouseControl = new MouseControl(boardCompiler);
+    private final BoardCompiler boardCompiler = new BoardCompiler();
+    private final BoardDrawer boardDrawer = new BoardDrawer(boardCompiler);
+    private final MouseControl mouseControl = new MouseControl(boardCompiler);
 
     @Override
     public void start(Stage primaryStage) {
 
-        this.primaryStage = primaryStage;
+        GameApplication.primaryStage = primaryStage;
         Scene scene = new Scene(boardDrawer.getBorderPane(), 900, 900, Color.BLACK);
         scene.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseControl.getMouseClick());
 
@@ -37,5 +37,9 @@ public class GameApplication extends Application {
 
     public static void main (String[] args){
         launch(args);
+    }
+
+    public static void close() {
+        primaryStage.close();
     }
 }
