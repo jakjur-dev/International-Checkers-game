@@ -26,58 +26,55 @@ public class NormalCaptures {
             if(piece.getValue().getPieceColor() == color && piece.getValue().getPieceType().isNormal()){
 
                 if(capturePossibility(piece.getKey(), 1, 1)){
-                    allPossibleCaptures.add(new PiecePosition(piece.getKey().getCol() + 1, piece.getKey().getRow() + 1));
                     allPiecesWhichCanCapture.add(piece.getKey());
                 }
                 if(capturePossibility(piece.getKey(), -1, -1)){
-                    allPossibleCaptures.add(new PiecePosition(piece.getKey().getCol() - 1, piece.getKey().getRow() - 1));
                     allPiecesWhichCanCapture.add(piece.getKey());
                 }
 
                 if(capturePossibility(piece.getKey(), -1, 1)){
-                    allPossibleCaptures.add(new PiecePosition(piece.getKey().getCol() - 1, piece.getKey().getRow() + 1));
                     allPiecesWhichCanCapture.add(piece.getKey());
                 }
                 if(capturePossibility(piece.getKey(), 1, -1)){
-                    allPossibleCaptures.add(new PiecePosition(piece.getKey().getCol() + 1, piece.getKey().getRow() - 1));
                     allPiecesWhichCanCapture.add(piece.getKey());
                 }
             }
         }
     }
 
-    public void captureCalculator(PiecePosition position) {
+    public void positionsAfterCaptureCalculator(PiecePosition position) {
         positionsAfterCapturing.clear();
         allPossibleCaptures.clear();
 
         if(capturePossibility(position, 1, 1)) {
-            allPossibleCaptures.add(new PiecePosition(position.getCol() + 1, position.getRow() + 1));
             positionsAfterCapturing.add(new PiecePosition(position.getCol() + 2, position.getRow() + 2));
         }
 
         if(capturePossibility(position, - 1, - 1)) {
-            allPossibleCaptures.add(new PiecePosition(position.getCol() - 1, position.getRow() - 1));
             positionsAfterCapturing.add(new PiecePosition(position.getCol() - 2, position.getRow() - 2));
         }
 
         if(capturePossibility(position, 1, - 1)) {
-            allPossibleCaptures.add(new PiecePosition(position.getCol() + 1, position.getRow() - 1));
             positionsAfterCapturing.add(new PiecePosition(position.getCol() + 2, position.getRow() - 2));
         }
 
         if(capturePossibility(position, - 1, 1)) {
-            allPossibleCaptures.add(new PiecePosition(position.getCol() - 1, position.getRow() + 1));
             positionsAfterCapturing.add(new PiecePosition(position.getCol() - 2, position.getRow() + 2));
         }
 
     }
 
     private boolean capturePossibility(PiecePosition actualPosition, int col, int row) {
-        return new PiecePosition(actualPosition.getCol() + col, actualPosition.getRow() + row).isValidPosition()
+        if (new PiecePosition(actualPosition.getCol() + col, actualPosition.getRow() + row).isValidPosition()
                 && new PiecePosition(actualPosition.getCol() + (col * 2), actualPosition.getRow() + (row * 2)).isValidPosition()
                 && !boardCompiler.isFieldNull(new PiecePosition(actualPosition.getCol() + col, actualPosition.getRow() + row))
                 && boardCompiler.isFieldNull(new PiecePosition(actualPosition.getCol() + (col * 2), actualPosition.getRow() + (row * 2)))
-                && (boardCompiler.getPiece(actualPosition).getPieceColor() != boardCompiler.getPiece(new PiecePosition(actualPosition.getCol() + col, actualPosition.getRow() + row)).getPieceColor());
+                && (boardCompiler.getPiece(actualPosition).getPieceColor() != boardCompiler.getPiece(new PiecePosition(actualPosition.getCol() + col, actualPosition.getRow() + row)).getPieceColor())){
+            allPossibleCaptures.add(new PiecePosition(actualPosition.getCol() + col, actualPosition.getRow() + row));
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void clear() {

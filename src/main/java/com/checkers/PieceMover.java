@@ -1,7 +1,5 @@
 package com.checkers;
 
-import com.checkers.NormalCaptures;
-
 import java.util.Map;
 import java.util.Set;
 
@@ -31,10 +29,10 @@ public class PieceMover {
         board.put(newPosition, pieceType);
     }
 
-    public static void capturePiece(Map<PiecePosition, PieceType> board, PiecePosition newPosition, PiecePosition oldPosition, NormalCaptures normalCaptures) {
+    public static void capturePiece(Map<PiecePosition, PieceType> board, PiecePosition newPosition, PiecePosition oldPosition, NormalCaptures normalCaptures, QueenCaptures queenCaptures) {
         PieceType pieceType = board.get(oldPosition);
 
-        PiecePosition kickPosition = findOppositePosition(newPosition, normalCaptures.getAllPossibleCaptures());
+        PiecePosition kickPosition = findOppositePosition(newPosition, normalCaptures.getAllPossibleCaptures(), queenCaptures.getAllPossibleQueenCaptures());
 
         BoardDrawer.addPiece(newPosition, pieceType, false);
         BoardDrawer.removePiece(oldPosition);
@@ -44,8 +42,8 @@ public class PieceMover {
         board.remove(oldPosition);
         board.remove(kickPosition);
 
-        normalCaptures.captureCalculator(newPosition);
-
+        normalCaptures.positionsAfterCaptureCalculator(newPosition);
+        queenCaptures.queenPositionsAfterCaptureCalculator(newPosition);
 
         if(!normalCaptures.getPositionsAfterCapturing().isEmpty() && pieceType.getPieceType().isNormal()) {
             normalCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::highlightMove);
@@ -53,9 +51,16 @@ public class PieceMover {
             BoardDrawer.removePiece(oldPosition);
             BoardDrawer.addPiece(newPosition, pieceType, true);
         }
+
+        if(!queenCaptures.getPositionsAfterCapturing().isEmpty() && pieceType.getPieceType().isQueen()) {
+            queenCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::highlightMove);
+
+            BoardDrawer.removePiece(oldPosition);
+            BoardDrawer.addPiece(newPosition, pieceType, true);
+        }
     }
 
-    public static PiecePosition findOppositePosition(PiecePosition newPosition, Set<PiecePosition> possibleNormalCaptures) {
+    public static PiecePosition findOppositePosition(PiecePosition newPosition, Set<PiecePosition> possibleNormalCaptures, Set<PiecePosition> PossibleQueenCaptures){
 
         PiecePosition upLeft = new PiecePosition(newPosition.getCol() - 1, newPosition.getRow() - 1);
         PiecePosition downLeft = new PiecePosition(newPosition.getCol() - 1, newPosition.getRow() + 1);
@@ -64,16 +69,16 @@ public class PieceMover {
 
         PiecePosition kickPosition = null;
 
-        if(possibleNormalCaptures.contains(upLeft)) {
+        if(possibleNormalCaptures.contains(upLeft) || PossibleQueenCaptures.contains(upLeft)) {
             kickPosition = upLeft;
         }
-        if(possibleNormalCaptures.contains(downLeft)) {
+        if(possibleNormalCaptures.contains(downLeft) || PossibleQueenCaptures.contains(downLeft)) {
             kickPosition = downLeft;
         }
-        if(possibleNormalCaptures.contains(upRight)) {
+        if(possibleNormalCaptures.contains(upRight) || PossibleQueenCaptures.contains(upRight)) {
             kickPosition = upRight;
         }
-        if(possibleNormalCaptures.contains(downRight)) {
+        if(possibleNormalCaptures.contains(downRight) || PossibleQueenCaptures.contains(downRight)) {
             kickPosition = downRight;
         }
 
