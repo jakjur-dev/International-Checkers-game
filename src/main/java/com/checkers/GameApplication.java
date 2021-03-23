@@ -7,12 +7,8 @@ package com.checkers;
 
 import javafx.application.Application;
 import javafx.scene.*;
-import javafx.scene.canvas.*;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class GameApplication extends Application {
@@ -26,7 +22,7 @@ public class GameApplication extends Application {
     public void start(Stage primaryStage) {
 
         GameApplication.primaryStage = primaryStage;
-        Scene scene = new Scene(boardDrawer.getBorderPane(), 900, 900, Color.BLACK);
+        Scene scene = new Scene(boardDrawer.getBorderPane(), 900, 925, Color.BLACK);
         scene.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseControl.getMouseClick());
 
         primaryStage.setTitle("Checkers Game");

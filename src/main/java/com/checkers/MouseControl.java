@@ -16,7 +16,7 @@ public class MouseControl {
         @Override
         public void handle(MouseEvent event) {
 
-            PiecePosition clickPosition = new PiecePosition((int) ((event.getX() - 42) / 85), (int) ((event.getY() - 42) / 85));
+            PiecePosition clickPosition = new PiecePosition((int) ((event.getX() - 45) / 85), (int) ((event.getY() - 45) / 85));
 
             if(!clickPosition.isValidPosition()) {
                 return;

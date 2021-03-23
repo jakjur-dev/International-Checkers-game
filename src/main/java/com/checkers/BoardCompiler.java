@@ -51,7 +51,7 @@ public class BoardCompiler {
 
                 if ((normalCaptures.getAllPiecesWhichCanCapture().contains(position)
                         || queenCaptures.getAllQueensWhichCanCapture().contains(position))
-                        && board.get(position).getPieceColor().isWhite()
+                        && board.get(position).getPieceColor() == PieceType.Color.WHITE
                         && !isKick) {
 
                     PieceMover.pickPiece(board, position, pickedPosition, true);
@@ -258,6 +258,7 @@ public class BoardCompiler {
 
     private void endMove() {
         pickedPosition = null;
+        possiblePromote.clear();
 
         endGame.checkEndGame(getBoard().keySet());
         Promoter.promote(board, possiblePromote);
@@ -270,6 +271,7 @@ public class BoardCompiler {
 
     private void endCapture() {
         pickedPosition = null;
+        possiblePromote.clear();
 
         endGame.checkEndGame(getBoard().keySet());
         Promoter.promote(board, possiblePromote);

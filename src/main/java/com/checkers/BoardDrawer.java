@@ -47,7 +47,13 @@ public class BoardDrawer {
             addPiece(pieces.getKey(), pieces.getValue(), false);
         }
 
+        //create menu
         borderPane.setCenter(grid);
+
+        MenuDesign menuDesign = new MenuDesign();
+        borderPane.setTop(menuDesign.getMenuBar());
+
+        menuDesign.getNewGame().setOnAction(e -> new NewGame().start(boardCompiler));
     }
 
     protected static void addPiece(PiecePosition position, PieceType pieceType, boolean highlight) {
