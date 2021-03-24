@@ -5,17 +5,17 @@ import java.util.Set;
 
 public class PieceMover {
 
-    public static void pickPiece(Map<PiecePosition, PieceType> board, PiecePosition position, PiecePosition oldPosition, boolean light) {
+    public static void pickPiece(Map<PiecePosition, PieceType> board, PiecePosition position, PiecePosition oldPosition) {
         PieceType pieceTypeNew = board.get(position);
         PieceType pieceTypeOld = board.get(oldPosition);
 
         if(oldPosition != null) {
             BoardDrawer.removePiece(oldPosition);
-            BoardDrawer.addPiece(oldPosition, pieceTypeOld, !light);
+            BoardDrawer.addPiece(oldPosition, pieceTypeOld, false);
         }
 
         BoardDrawer.removePiece(position);
-        BoardDrawer.addPiece(position, pieceTypeNew, light);
+        BoardDrawer.addPiece(position, pieceTypeNew, true);
     }
 
     public static void movePiece(Map<PiecePosition, PieceType> board, PiecePosition newPosition, PiecePosition oldPosition) {

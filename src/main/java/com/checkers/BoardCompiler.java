@@ -8,7 +8,8 @@ import java.util.Set;
 public class BoardCompiler {
 
     private final Map<PiecePosition, PieceType> board = new HashMap<>();
-    private final Set<PiecePosition> possiblePromote = new HashSet<>();
+
+    private final Promoter promoter = new Promoter();
 
     private final NormalMoves normalMoves = new NormalMoves(this);
     private final NormalCaptures normalCaptures;
@@ -16,10 +17,12 @@ public class BoardCompiler {
     private final QueenMoves queenMoves = new QueenMoves(this);
     private final QueenCaptures queenCaptures;
 
-    private final EndGame endGame = new EndGame(this);
+    private final EndConditions endConditions = new EndConditions(this);
 
-    private boolean turn = true;
-    private boolean isKick = false;
+    private boolean playerTurn = true;
+    private boolean capturing = false;
+
+    private final AIMoveGenerator AIMoveGenerator;
 
     private PiecePosition pickedPosition;
 
@@ -30,6 +33,7 @@ public class BoardCompiler {
 
         this.queenCaptures = new QueenCaptures(this);
         this.normalCaptures = new NormalCaptures(this);
+        this.AIMoveGenerator = new AIMoveGenerator();
     }
 
     public PieceType getPiece(PiecePosition position) {
@@ -42,7 +46,7 @@ public class BoardCompiler {
 
     public void handleMove(PiecePosition position) {
 
-        if (turn) {
+        if (playerTurn) {
 
             normalCaptures.calculateAllPossibleCaptures(PieceType.Color.WHITE);
             queenCaptures.calculateAllPossibleQueenCaptures(PieceType.Color.WHITE);
@@ -52,9 +56,9 @@ public class BoardCompiler {
                 if ((normalCaptures.getAllPiecesWhichCanCapture().contains(position)
                         || queenCaptures.getAllQueensWhichCanCapture().contains(position))
                         && board.get(position).getPieceColor() == PieceType.Color.WHITE
-                        && !isKick) {
+                        && !capturing) {
 
-                    PieceMover.pickPiece(board, position, pickedPosition, true);
+                    PieceMover.pickPiece(board, position, pickedPosition);
                     pickedPosition = position;
 
                     normalCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::removePiece);
@@ -77,26 +81,25 @@ public class BoardCompiler {
                     }
 
                 } else if ((queenCaptures.getPositionsAfterCapturing().contains(position)
-                        && board.get(pickedPosition).getPieceType().isQueen()) || (normalCaptures.getPositionsAfterCapturing().contains(position)
-                        && board.get(pickedPosition).getPieceType().isNormal())) {
+                            && board.get(pickedPosition).getPieceType().isQueen()) || (normalCaptures.getPositionsAfterCapturing().contains(position)
+                            && board.get(pickedPosition).getPieceType().isNormal())) {
 
-                    queenCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::removePiece);
+                        queenCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::removePiece);
+                        normalCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::removePiece);
 
-                    PieceMover.capturePiece(board, position, pickedPosition, normalCaptures, queenCaptures);
-                    pickedPosition = position;
+                        PieceMover.capturePiece(board, position, pickedPosition, normalCaptures, queenCaptures);
+                        pickedPosition = position;
 
-                    if (queenCaptures.getPositionsAfterCapturing().isEmpty()) {
+                        if (queenCaptures.getPositionsAfterCapturing().isEmpty()
+                                || (normalCaptures.getPositionsAfterCapturing().isEmpty())) {
 
-                        turn = false;
+                            playerTurn = false;
 
-                        isKick = false;
+                            capturing = false;
 
-                        endCapture();
+                        } else {
 
-                    } else {
-
-                        isKick = true;
-
+                            capturing = true;
                     }
                 }
             } else {
@@ -104,7 +107,7 @@ public class BoardCompiler {
                 if (board.get(position) != null
                         && board.get(position).getPieceColor() == PieceType.Color.WHITE) {
 
-                    PieceMover.pickPiece(board, position, pickedPosition, true);
+                    PieceMover.pickPiece(board, position, pickedPosition);
                     pickedPosition = position;
 
                     normalMoves.getAllPossiblePieceMoves().forEach(BoardDrawer::removePiece);
@@ -131,9 +134,7 @@ public class BoardCompiler {
 
                     PieceMover.movePiece(board, position, pickedPosition);
 
-                    turn = false;
-
-                    endMove();
+                    playerTurn = false;
 
                 } else if (queenMoves.getPossibleQueenMoves().contains(position)
                         && pickedPosition != null) {
@@ -142,143 +143,128 @@ public class BoardCompiler {
 
                     PieceMover.movePiece(board, position, pickedPosition);
 
-                    turn = false;
-
-                    endMove();
+                    playerTurn = false;
                 }
             }
         } else {
+
+            endMove();
+            computerMove();
+
+        }
+    }
+
+    private void computerMove() {
+
+        do {
+
+            if(AIMoveGenerator.checkBlacksEnd(endConditions.getRestOfBlacks())) {
+                break;
+            }
+
             normalCaptures.calculateAllPossibleCaptures(PieceType.Color.BLACK);
             queenCaptures.calculateAllPossibleQueenCaptures(PieceType.Color.BLACK);
 
             if (!normalCaptures.getAllPossibleCaptures().isEmpty() || !queenCaptures.getAllPossibleQueenCaptures().isEmpty()) {
 
-                if ((normalCaptures.getAllPiecesWhichCanCapture().contains(position)
-                        || queenCaptures.getAllQueensWhichCanCapture().contains(position))
-                        && board.get(position).getPieceColor() == PieceType.Color.BLACK
-                        && !isKick) {
+                Set<PiecePosition> allBlacks = new HashSet<>();
 
-                    PieceMover.pickPiece(board, position, pickedPosition, true);
-                    pickedPosition = position;
+                allBlacks.addAll(normalCaptures.getAllPiecesWhichCanCapture());
+                allBlacks.addAll(queenCaptures.getAllQueensWhichCanCapture());
 
-                    normalCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::removePiece);
-                    queenCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::removePiece);
+                PiecePosition computerCapture = AIMoveGenerator.selectPosition(allBlacks);
 
-                    if (board.get(position).getPieceType().isNormal()) {
+                pickedPosition = computerCapture;
 
-                        queenCaptures.clear();
+                if (board.get(pickedPosition).getPieceType().isNormal()) {
 
-                        normalCaptures.positionsAfterCaptureCalculator(position);
-                        normalCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::highlightMove);
+                    queenCaptures.clear();
+                    normalCaptures.clear();
 
-                    } else {
+                    normalCaptures.positionsAfterCaptureCalculator(pickedPosition);
 
-                        normalCaptures.clear();
+                    if (!normalCaptures.getPositionsAfterCapturing().isEmpty()) {
 
-                        queenCaptures.queenPositionsAfterCaptureCalculator(position);
-                        queenCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::highlightMove);
+                        computerCapture = AIMoveGenerator.selectPosition(normalCaptures.getPositionsAfterCapturing());
 
+                        PieceMover.capturePiece(board, computerCapture, pickedPosition, normalCaptures, queenCaptures);
+
+                        if (normalCaptures.getPositionsAfterCapturing().isEmpty()) {
+
+                            endMove();
+
+                            playerTurn = true;
+                        }
                     }
 
-                } else if ((queenCaptures.getPositionsAfterCapturing().contains(position)
-                        && board.get(pickedPosition).getPieceType().isQueen()) || (normalCaptures.getPositionsAfterCapturing().contains(position)
-                        && board.get(pickedPosition).getPieceType().isNormal())) {
+                } else {
 
-                    queenCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::removePiece);
+                    queenCaptures.clear();
+                    normalCaptures.clear();
 
-                    PieceMover.capturePiece(board, position, pickedPosition, normalCaptures, queenCaptures);
-                    pickedPosition = position;
+                    queenCaptures.queenPositionsAfterCaptureCalculator(pickedPosition);
 
-                    if (queenCaptures.getPositionsAfterCapturing().isEmpty()) {
+                    if (!queenCaptures.getPositionsAfterCapturing().isEmpty()) {
 
-                        turn = true;
+                        computerCapture = AIMoveGenerator.selectPosition(queenCaptures.getPositionsAfterCapturing());
 
-                        isKick = false;
+                        PieceMover.capturePiece(board, computerCapture, pickedPosition, normalCaptures, queenCaptures);
 
-                        endCapture();
+                        if (queenCaptures.getPositionsAfterCapturing().isEmpty()) {
 
-                    } else {
+                            endMove();
 
-                        isKick = true;
-
+                            playerTurn = true;
+                        }
                     }
                 }
+
             } else {
 
-                if (board.get(position) != null
-                        && board.get(position).getPieceColor() == PieceType.Color.BLACK) {
+                    normalMoves.allPossibleAIMovesCalculator();
 
-                    PieceMover.pickPiece(board, position, pickedPosition, true);
-                    pickedPosition = position;
 
-                    normalMoves.getAllPossiblePieceMoves().forEach(BoardDrawer::removePiece);
-                    queenMoves.getPossibleQueenMoves().forEach(BoardDrawer::removePiece);
+                PiecePosition computerMove = AIMoveGenerator.selectPosition(normalMoves.getAllPossibleAIMoves());
+
+                pickedPosition = computerMove;
+
+                if (board.get(computerMove).getPieceType().isNormal()) {
 
                     normalMoves.clear();
 
-                    if (board.get(position).getPieceType() == PieceType.Type.NORMAL) {
+                    normalMoves.normalMoveCalculator(computerMove, false);
 
-                        normalMoves.normalMoveCalculator(position, false);
-                        normalMoves.getAllPossiblePieceMoves().forEach(BoardDrawer::highlightMove);
+                    computerMove = AIMoveGenerator.selectPosition(normalMoves.getAllPossiblePieceMoves());
 
-                    } else {
+                } else {
 
-                        queenMoves.normalQueenMoveCalculator(position);
-                        queenMoves.getPossibleQueenMoves().forEach(BoardDrawer::highlightMove);
+                    queenMoves.getPossibleQueenMoves().clear();
 
-                    }
+                    queenMoves.normalQueenMoveCalculator(computerMove);
 
-                } else if (normalMoves.getAllPossiblePieceMoves().contains(position)
-                        && pickedPosition != null) {
+                    computerMove = AIMoveGenerator.selectPosition(queenMoves.getPossibleQueenMoves());
 
-                    normalMoves.getAllPossiblePieceMoves().forEach(BoardDrawer::removePiece);
-
-                    PieceMover.movePiece(board, position, pickedPosition);
-
-                    turn = true;
-
-                    endMove();
-
-                } else if (queenMoves.getPossibleQueenMoves().contains(position)
-                        && pickedPosition != null) {
-
-                    queenMoves.getPossibleQueenMoves().forEach(BoardDrawer::removePiece);
-
-                    PieceMover.movePiece(board, position, pickedPosition);
-
-                    turn = true;
-
-                    endMove();
                 }
+                PieceMover.movePiece(board, computerMove, pickedPosition);
+                endMove();
+                playerTurn = true;
             }
 
-        }
-    }
+        } while(!playerTurn);
 
+    }
 
     private void endMove() {
         pickedPosition = null;
-        possiblePromote.clear();
 
-        endGame.checkEndGame(getBoard().keySet());
-        Promoter.promote(board, possiblePromote);
+        promoter.promote(board);
+        endConditions.checkEndGame(getBoard().keySet());
 
         normalMoves.clear();
         normalCaptures.clear();
         queenMoves.getPossibleQueenMoves().clear();
         queenCaptures.clear();
-    }
 
-    private void endCapture() {
-        pickedPosition = null;
-        possiblePromote.clear();
-
-        endGame.checkEndGame(getBoard().keySet());
-        Promoter.promote(board, possiblePromote);
-
-        normalCaptures.clear();
-        queenCaptures.clear();
-        normalCaptures.clear();
     }
 
     public Map<PiecePosition, PieceType> getBoard() {

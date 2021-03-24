@@ -1,12 +1,16 @@
 package com.checkers;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Promoter {
 
-    static void promote(Map<PiecePosition, PieceType> board, Set<PiecePosition> possiblePromote) {
+
+public class Promoter {
+    private final Set<PiecePosition> possiblePromote = new HashSet<>();
+
+    public void promote(Map<PiecePosition, PieceType> board) {
         possiblePromote.clear();
 
         Set<PiecePosition> whites = board.keySet().stream()

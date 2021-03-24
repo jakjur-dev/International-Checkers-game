@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class EndGame {
+public class EndConditions {
 
     private final BoardCompiler boardCompiler;
     private final Set<PiecePosition> restOfWhites = new HashSet<>();
@@ -14,7 +14,7 @@ public class EndGame {
     private final Set<PiecePosition> blackPieceMoves = new HashSet<>();
     private final NormalMoves normalMoves;
 
-    public EndGame(BoardCompiler boardCompiler) {
+    public EndConditions(BoardCompiler boardCompiler) {
         this.boardCompiler = boardCompiler;
         this.normalMoves = new NormalMoves(boardCompiler);
     }
@@ -78,5 +78,9 @@ public class EndGame {
 
         restOfWhites.addAll(whites);
         restOfBlacks.addAll(blacks);
+    }
+
+    public Set<PiecePosition> getRestOfBlacks() {
+        return restOfBlacks;
     }
 }

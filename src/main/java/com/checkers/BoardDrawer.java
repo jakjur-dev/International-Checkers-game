@@ -69,7 +69,10 @@ public class BoardDrawer {
     }
 
     protected static void highlightMove(PiecePosition position) {
-        grid.add(new ImageView(highlight), position.getCol(), position.getRow());
+        ImageView hLight = new ImageView(highlight);
+        hLight.setFitHeight(40);
+        hLight.setFitWidth(40);
+        grid.add(hLight, position.getCol(), position.getRow());
     }
 
     public BorderPane getBorderPane() {

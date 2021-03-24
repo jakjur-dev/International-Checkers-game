@@ -1,6 +1,7 @@
 package com.checkers;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class NormalMoves {
@@ -16,6 +17,9 @@ public class NormalMoves {
     }
 
     public void normalMoveCalculator(PiecePosition actualPosition, boolean up) {
+
+        allPossiblePieceMoves.clear();
+
         int direction = up ? - 1 : 1;
 
         PiecePosition left = new PiecePosition(actualPosition.getCol() - 1, actualPosition.getRow() + direction);
@@ -27,6 +31,35 @@ public class NormalMoves {
 
         if (right.isValidPosition() && boardCompiler.isFieldNull(right)) {
             allPossiblePieceMoves.add(right);
+        }
+    }
+
+    public void allPossibleAIMovesCalculator() {
+        allPossibleAIMoves.clear();
+
+        for(Map.Entry<PiecePosition, PieceType> blacks : boardCompiler.getBoard().entrySet()) {
+            if(blacks.getValue().getPieceColor().isWhite()) {
+                continue;
+            }
+
+            allPossiblePieceMoves.clear();
+
+            if(blacks.getValue().getPieceType().isNormal()) {
+                normalMoveCalculator(blacks.getKey(), false);
+                for(PiecePosition position : allPossiblePieceMoves){
+                    if(position != null && position.isValidPosition()) {
+                        allPossibleAIMoves.add(blacks.getKey());
+                    }
+                }
+            } else {
+                normalMoveCalculator(blacks.getKey(), true);
+                normalMoveCalculator(blacks.getKey(), false);
+                for(PiecePosition position : allPossiblePieceMoves){
+                    if(position != null && position.isValidPosition()) {
+                        allPossibleAIMoves.add(blacks.getKey());
+                    }
+                }
+            }
         }
     }
 
