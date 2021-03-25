@@ -1,6 +1,8 @@
 package com.checkers;
 
 
+import com.checkers.menubar.EndGameWindow;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,15 +26,15 @@ public class EndConditions {
         calculatePieces(positions);
 
         if(restOfWhites.size() == 0 || whitePieceMoves.size() == 0) {
-            new EndGameWindow(boardCompiler).blacksWin();
+            new EndGameWindow().blacksWin();
         }
 
         if(restOfBlacks.size() == 0 || blackPieceMoves.size() == 0) {
-            new EndGameWindow(boardCompiler).whitesWin();
+            new EndGameWindow().whitesWin();
         }
 
         if(restOfWhites.size() == 1 && restOfBlacks.size() == 1) {
-            new EndGameWindow(boardCompiler).draw();
+            new EndGameWindow().draw();
         }
     }
 

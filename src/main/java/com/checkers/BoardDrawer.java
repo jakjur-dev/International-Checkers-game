@@ -1,5 +1,7 @@
 package com.checkers;
 
+import com.checkers.menubar.DifficultyWindow;
+import com.checkers.menubar.MenuBarDesign;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -50,10 +52,11 @@ public class BoardDrawer {
         //create menu
         borderPane.setCenter(grid);
 
-        MenuDesign menuDesign = new MenuDesign();
-        borderPane.setTop(menuDesign.getMenuBar());
+        MenuBarDesign menuBarDesign = new MenuBarDesign();
+        borderPane.setTop(menuBarDesign.getMenuBar());
 
-        menuDesign.getNewGame().setOnAction(e -> new NewGame().start(boardCompiler));
+        menuBarDesign.getNewGame().setOnAction(e -> new NewGame().start(boardCompiler));
+        menuBarDesign.getDifficulty().setOnAction(e -> new DifficultyWindow());
     }
 
     protected static void addPiece(PiecePosition position, PieceType pieceType, boolean highlight) {

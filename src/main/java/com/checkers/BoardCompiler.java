@@ -80,26 +80,51 @@ public class BoardCompiler {
 
                     }
 
-                } else if ((queenCaptures.getPositionsAfterCapturing().contains(position)
-                            && board.get(pickedPosition).getPieceType().isQueen()) || (normalCaptures.getPositionsAfterCapturing().contains(position)
-                            && board.get(pickedPosition).getPieceType().isNormal())) {
+                } else {
 
-                        queenCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::removePiece);
+                    if(normalCaptures.getPositionsAfterCapturing().contains(position)
+                        && getPiece(pickedPosition).getPieceType().isNormal()) {
+
                         normalCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::removePiece);
 
                         PieceMover.capturePiece(board, position, pickedPosition, normalCaptures, queenCaptures);
                         pickedPosition = position;
 
-                        if (queenCaptures.getPositionsAfterCapturing().isEmpty()
-                                || (normalCaptures.getPositionsAfterCapturing().isEmpty())) {
+                        if(normalCaptures.getPositionsAfterCapturing().isEmpty()) {
 
                             playerTurn = false;
 
                             capturing = false;
 
+                            endMove();
+
                         } else {
 
                             capturing = true;
+
+                        }
+
+                    } else if(queenCaptures.getPositionsAfterCapturing().contains(position)
+                            && getPiece(pickedPosition).getPieceType().isQueen()) {
+
+                        queenCaptures.getPositionsAfterCapturing().forEach(BoardDrawer::removePiece);
+
+                        PieceMover.capturePiece(board, position, pickedPosition, normalCaptures, queenCaptures);
+                        pickedPosition = position;
+
+                        if(queenCaptures.getPositionsAfterCapturing().isEmpty()) {
+
+                            playerTurn = false;
+
+                            capturing = false;
+
+                            endMove();;
+
+                        } else {
+
+                            capturing = true;
+
+                        }
                     }
                 }
             } else {
@@ -221,7 +246,20 @@ public class BoardCompiler {
 
             } else {
 
+                if(AIMoveGenerator.getDifficultyLevel() == 1) {
+
+                    normalMoves.normalDifficultyAIMovesCalculator();
+
+                    if(normalMoves.getAllPossibleAIMoves().isEmpty()) {
+
+                        normalMoves.allPossibleAIMovesCalculator();
+                    }
+
+                } else {
+
                     normalMoves.allPossibleAIMovesCalculator();
+
+                }
 
 
                 PiecePosition computerMove = AIMoveGenerator.selectPosition(normalMoves.getAllPossibleAIMoves());

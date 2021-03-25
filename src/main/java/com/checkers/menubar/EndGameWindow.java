@@ -1,14 +1,13 @@
-package com.checkers;
+package com.checkers.menubar;
 
+import com.checkers.BoardCompiler;
+import com.checkers.GameApplication;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 public class EndGameWindow {
-
-    public EndGameWindow(BoardCompiler boardCompiler) {
-    }
 
     public void whitesWin() {
 

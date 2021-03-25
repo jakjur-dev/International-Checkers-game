@@ -63,6 +63,35 @@ public class NormalMoves {
         }
     }
 
+    public void normalDifficultyAIMovesCalculator() {
+        allPossibleAIMoves.clear();
+
+        for(Map.Entry<PiecePosition, PieceType> blacks : boardCompiler.getBoard().entrySet()) {
+            if(blacks.getValue().getPieceColor().isWhite()) {
+                continue;
+            }
+
+            allPossiblePieceMoves.clear();
+
+            if(blacks.getValue().getPieceType().isNormal()) {
+                normalMoveCalculator(blacks.getKey(), false);
+                for(PiecePosition position : allPossiblePieceMoves){
+                    if(position != null && position.isValidPosition() && blacks.getKey().getRow() == 6) {
+                        allPossibleAIMoves.add(blacks.getKey());
+                    }
+                }
+            } else {
+                normalMoveCalculator(blacks.getKey(), true);
+                normalMoveCalculator(blacks.getKey(), false);
+                for(PiecePosition position : allPossiblePieceMoves){
+                    if(position != null && position.isValidPosition()) {
+                        allPossibleAIMoves.add(blacks.getKey());
+                    }
+                }
+            }
+        }
+    }
+
     public Set<PiecePosition> getAllPossiblePieceMoves() {
         return allPossiblePieceMoves;
     }

@@ -1,4 +1,4 @@
-package com.checkers;
+package com.checkers.menubar;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
