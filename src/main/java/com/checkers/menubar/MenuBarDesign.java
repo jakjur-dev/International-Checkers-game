@@ -6,11 +6,12 @@ import javafx.scene.control.MenuItem;
 
 public class MenuBarDesign {
 
-    private MenuBar menuBar = new MenuBar();
+    private final MenuBar menuBar = new MenuBar();
 
-    private Menu game = new Menu("Game");
-    private MenuItem newGame = new MenuItem("New game");
-    private MenuItem difficulty = new MenuItem("Difficulty");
+    private final Menu game = new Menu("Game");
+    private final MenuItem newGame = new MenuItem("New game");
+    private final MenuItem difficulty = new MenuItem("Difficulty");
+    private final MenuItem saveLoad = new MenuItem("Save/Load");
 
     public MenuBarDesign() {
         createMenu();
@@ -20,6 +21,7 @@ public class MenuBarDesign {
         menuBar.getMenus().add(game);
         game.getItems().add(newGame);
         game.getItems().add(difficulty);
+        game.getItems().add(saveLoad);
     }
     public MenuBar getMenuBar() {
         return menuBar;
@@ -31,5 +33,9 @@ public class MenuBarDesign {
 
     public MenuItem getDifficulty() {
         return difficulty;
+    }
+
+    public MenuItem getSaveLoad() {
+        return saveLoad;
     }
 }

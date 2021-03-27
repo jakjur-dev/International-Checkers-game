@@ -1,5 +1,7 @@
 package com.checkers;
 
+import com.checkers.menubar.SaveLoadWindow;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -7,7 +9,9 @@ import java.util.Set;
 
 public class BoardCompiler {
 
-    private final Map<PiecePosition, PieceType> board = new HashMap<>();
+    private Map<PiecePosition, PieceType> board = new HashMap<>();
+
+    private final SaveLoadGame saveLoadGame = new SaveLoadGame(this);
 
     private final Promoter promoter = new Promoter();
 
@@ -27,9 +31,14 @@ public class BoardCompiler {
     private PiecePosition pickedPosition;
 
     public BoardCompiler() {
-
-        PiecesInitialPositions piecesInitialPositions = new PiecesInitialPositions();
-        board.putAll(piecesInitialPositions.setUpPieces());
+        if(saveLoadGame.fileExists()) {
+            saveLoadGame.loadGame();
+            saveLoadGame.removeFile();
+            SaveLoadWindow.loadInfo();
+        } else {
+            PiecesInitialPositions piecesInitialPositions = new PiecesInitialPositions();
+            board.putAll(piecesInitialPositions.setUpPieces());
+        }
 
         this.queenCaptures = new QueenCaptures(this);
         this.normalCaptures = new NormalCaptures(this);
@@ -307,5 +316,13 @@ public class BoardCompiler {
 
     public Map<PiecePosition, PieceType> getBoard() {
         return board;
+    }
+
+    public void setBoard(Map<PiecePosition, PieceType> board) {
+        this.board = board;
+    }
+
+    public SaveLoadGame getSaveLoadGame() {
+        return saveLoadGame;
     }
 }

@@ -1,6 +1,8 @@
 package com.checkers;
 
-public class PiecePosition  {
+import java.io.Serializable;
+
+public class PiecePosition implements Serializable {
 
     private int col;
     private int row;

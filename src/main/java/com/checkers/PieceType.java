@@ -1,6 +1,8 @@
 package com.checkers;
 
-public class PieceType {
+import java.io.Serializable;
+
+public class PieceType implements Serializable {
 
     private Color pieceColor;
     private Type pieceType;

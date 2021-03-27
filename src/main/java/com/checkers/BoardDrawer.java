@@ -2,6 +2,7 @@ package com.checkers;
 
 import com.checkers.menubar.DifficultyWindow;
 import com.checkers.menubar.MenuBarDesign;
+import com.checkers.menubar.SaveLoadWindow;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -57,6 +58,7 @@ public class BoardDrawer {
 
         menuBarDesign.getNewGame().setOnAction(e -> new NewGame().start(boardCompiler));
         menuBarDesign.getDifficulty().setOnAction(e -> new DifficultyWindow());
+        menuBarDesign.getSaveLoad().setOnAction(e -> new SaveLoadWindow(boardCompiler));
     }
 
     protected static void addPiece(PiecePosition position, PieceType pieceType, boolean highlight) {

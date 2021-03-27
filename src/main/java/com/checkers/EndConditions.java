@@ -14,11 +14,9 @@ public class EndConditions {
     private final Set<PiecePosition> restOfBlacks = new HashSet<>();
     private final Set<PiecePosition> whitePieceMoves = new HashSet<>();
     private final Set<PiecePosition> blackPieceMoves = new HashSet<>();
-    private final NormalMoves normalMoves;
 
     public EndConditions(BoardCompiler boardCompiler) {
         this.boardCompiler = boardCompiler;
-        this.normalMoves = new NormalMoves(boardCompiler);
     }
 
 
