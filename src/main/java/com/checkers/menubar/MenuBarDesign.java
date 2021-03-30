@@ -12,17 +12,17 @@ public class MenuBarDesign {
     private final MenuItem newGame = new MenuItem("New game");
     private final MenuItem difficulty = new MenuItem("Difficulty");
     private final MenuItem saveLoad = new MenuItem("Save/Load");
+    private final MenuItem ranking = new MenuItem("Ranking");
 
     public MenuBarDesign() {
-        createMenu();
-    }
-
-    private void createMenu() {
         menuBar.getMenus().add(game);
         game.getItems().add(newGame);
         game.getItems().add(difficulty);
         game.getItems().add(saveLoad);
+        game.getItems().add(ranking);
+        ranking.setOnAction(e -> new RankingWindow().showRanking());
     }
+
     public MenuBar getMenuBar() {
         return menuBar;
     }

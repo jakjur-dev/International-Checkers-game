@@ -192,7 +192,7 @@ public class BoardCompiler {
 
         do {
 
-            if(AIMoveGenerator.checkBlacksEnd(endConditions.getRestOfBlacks())) {
+            if(AIMoveGenerator.checkBlacksEnd(endConditions.getRemainingBlackPieces())) {
                 break;
             }
 
